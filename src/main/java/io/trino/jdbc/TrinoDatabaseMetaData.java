@@ -948,15 +948,15 @@ public class TrinoDatabaseMetaData
         schemaPattern = escapeIfNecessary(schemaPattern);
         tableNamePattern = escapeIfNecessary(tableNamePattern);
         StringBuilder query = new StringBuilder("" +
-                "SELECT TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS,\n" +
+                "SELECT upper(TABLE_CAT) TABLE_CAT, upper(TABLE_SCHEM) TABLE_SCHEM, upper(TABLE_NAME) TABLE_NAME, TABLE_TYPE, REMARKS,\n" +
                 "  TYPE_CAT, TYPE_SCHEM, TYPE_NAME, " +
                 "  SELF_REFERENCING_COL_NAME, REF_GENERATION\n" +
                 "FROM system.jdbc.tables");
 
         List<String> filters = new ArrayList<>();
-        emptyStringEqualsFilter(filters, "TABLE_CAT", catalog);
-        emptyStringLikeFilter(filters, "TABLE_SCHEM", schemaPattern);
-        optionalStringLikeFilter(filters, "TABLE_NAME", tableNamePattern);
+        emptyStringEqualsFilter(filters, "TABLE_CAT", catalog != null ? catalog.toLowerCase() : catalog);
+        emptyStringLikeFilter(filters, "TABLE_SCHEM", schemaPattern != null ? schemaPattern.toLowerCase() : schemaPattern);
+        optionalStringLikeFilter(filters, "TABLE_NAME", tableNamePattern != null ? tableNamePattern.toLowerCase() : tableNamePattern);
         optionalStringInFilter(filters, "TABLE_TYPE", types);
         buildFilters(query, filters);
 
@@ -1003,7 +1003,7 @@ public class TrinoDatabaseMetaData
         tableNamePattern = escapeIfNecessary(tableNamePattern);
         columnNamePattern = escapeIfNecessary(columnNamePattern);
         StringBuilder query = new StringBuilder("" +
-                "SELECT TABLE_CAT, TABLE_SCHEM, TABLE_NAME, COLUMN_NAME, DATA_TYPE,\n" +
+                "SELECT upper(TABLE_CAT) TABLE_CAT, upper(TABLE_SCHEM) TABLE_SCHEM, upper(TABLE_NAME) TABLE_NAME, upper(COLUMN_NAME) COLUMN_NAME, DATA_TYPE,\n" +
                 "  TYPE_NAME, COLUMN_SIZE, BUFFER_LENGTH, DECIMAL_DIGITS, NUM_PREC_RADIX,\n" +
                 "  NULLABLE, REMARKS, COLUMN_DEF, SQL_DATA_TYPE, SQL_DATETIME_SUB,\n" +
                 "  CHAR_OCTET_LENGTH, ORDINAL_POSITION, IS_NULLABLE,\n" +
@@ -1012,10 +1012,10 @@ public class TrinoDatabaseMetaData
                 "FROM system.jdbc.columns");
 
         List<String> filters = new ArrayList<>();
-        emptyStringEqualsFilter(filters, "TABLE_CAT", catalog);
-        emptyStringLikeFilter(filters, "TABLE_SCHEM", schemaPattern);
-        optionalStringLikeFilter(filters, "TABLE_NAME", tableNamePattern);
-        optionalStringLikeFilter(filters, "COLUMN_NAME", columnNamePattern);
+        emptyStringEqualsFilter(filters, "TABLE_CAT", catalog != null ? catalog.toLowerCase() : catalog);
+        emptyStringLikeFilter(filters, "TABLE_SCHEM", schemaPattern != null ? schemaPattern.toLowerCase() : schemaPattern);
+        optionalStringLikeFilter(filters, "TABLE_NAME", tableNamePattern != null ? tableNamePattern.toLowerCase() : tableNamePattern);
+        optionalStringLikeFilter(filters, "COLUMN_NAME", columnNamePattern != null ? columnNamePattern.toLowerCase() : columnNamePattern);
         buildFilters(query, filters);
 
         query.append("\nORDER BY TABLE_CAT, TABLE_SCHEM, TABLE_NAME, ORDINAL_POSITION");
